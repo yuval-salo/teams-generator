@@ -1,31 +1,40 @@
 import { Component } from '@angular/core';
-
+interface TeamMember{
+  name: string;
+  level: number;
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  newMemberName = '';
-  members : string[] = [];
+  newTeamMember: TeamMember = {name: '', level: 0};
+  members : TeamMember[] = [];
   errorMessage = ''
   numberOfTeams:  '' | number  = '';
-  teams : string[][] = [];
+  teams : TeamMember[][] = [];
 
 
-  onInput(member : string)
+  onInputName(name : string)
   {
-    this.newMemberName = member;
+    this.newTeamMember.name = name;
+  }
+
+  OnInputLevel(level : string)
+  {
+    this.newTeamMember.level = Number(level);
   }
 
   addMember(){
-    if (!this.newMemberName){
-      this.errorMessage = "Name can't be empty";
+    if (!this.newTeamMember.name || !this.newTeamMember.level ){
+      this.errorMessage = "Name or Level can't be empty";
       return
     }
-    
-    this.members.push(this.newMemberName)
-    this.newMemberName = "";
+    const newTeamMemberCopy : TeamMember = {name: this.newTeamMember.name, level: this.newTeamMember.level};
+    this.members.push(newTeamMemberCopy)
+    this.newTeamMember.name = '';
+    this.newTeamMember.level = 0;
     this.errorMessage = '';
   }
 
@@ -42,24 +51,18 @@ export class AppComponent {
       return
     }
 
-      this.errorMessage='';
-
-    while (allMembers.length){
-      for (let i = 0; i < +this.numberOfTeams; i++){
-        const randomIndex = Math.floor(Math.random() * allMembers.length);
-        const member = allMembers.splice(randomIndex, 1)[0];
-        if (!member){
-          break;
-        }
-        if (this.teams[i]){
-          this.teams[i].push(member);
-        }
-        else{
-          this.teams[i] = [member];
-        }
-      }
+    this.errorMessage='';
+    const sortedMembers = allMembers.sort((a ,b)=> b.level - a.level);
+    this.teams = [];
+    for (let i = 0; i < this.numberOfTeams; i++){
+      this.teams.push([]);
     }
 
+    let currentTeamIndex = 0;
+    for (const member of sortedMembers){
+      this.teams[currentTeamIndex].push(member);
+      currentTeamIndex = (currentTeamIndex + 1) %this.numberOfTeams;
+    }
     
     this.members = [];
     this.numberOfTeams = '';

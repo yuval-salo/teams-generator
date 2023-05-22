@@ -2,17 +2,24 @@
   <div class="ui card">
     <h1>Teams Generator</h1>
     <ul class="list">
-      <li *ngFor="let member of members">{{member}}</li>
+      <li *ngFor="let member of members">{{member.name}}</li>
     </ul>
 
     <div class="add-members-container">
       <input 
-            #addInputMember
+            #addInputName
              type="text" 
              placeholder="Name"
-             (input) = "onInput(addInputMember.value)"
-             [value]="newMemberName"
+             (input) = "onInputName(addInputName.value)"
+             [value]="newTeamMember.name"
              />
+      <input 
+            #addInputLevel
+            type="text"
+            placeholder="Level"
+            (input)="OnInputLevel(addInputLevel.value)"
+            [value]="newTeamMember.level"
+            />
       <button (click)="addMember()">Add</button>
     </div>
 
@@ -32,12 +39,11 @@
     </div>
 
     <div *ngIf="teams.length" class="teams-container">
-      <div *ngFor="let team of teams; let i = index" class="team-container">
-        <h3>Team {{ i + 1 }}</h3>
-      <ul>
-        <li *ngFor="let member of team">{{member}}</li>
-      </ul>
+      <app-team
+      *ngFor="let team of teams; let i = index"
+      [team]="team"
+      [index]="i"
+    ></app-team>
     </div>
-  </div>
   </div>    
 </div>
