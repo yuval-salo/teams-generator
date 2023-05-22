@@ -1,8 +1,11 @@
-.container {
-    padding: 4rem;
-    width: 40rem;
-    margin: 0 auto;
-  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+      height: 80vh;
+    }
+  
   
   h1 {
     font-size: 3rem;

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 interface TeamMember{
   name: string;
-  level: number;
+  level: number | '';
 }
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ interface TeamMember{
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  newTeamMember: TeamMember = {name: '', level: 0};
+  newTeamMember: TeamMember = {name: '', level: ''};
   members : TeamMember[] = [];
   errorMessage = ''
   numberOfTeams:  '' | number  = '';
@@ -23,7 +23,13 @@ export class AppComponent {
 
   OnInputLevel(level : string)
   {
-    this.newTeamMember.level = Number(level);
+    if (!isNaN(parseFloat(level))){
+      this.newTeamMember.level = Number(level);
+      this.errorMessage = '';
+    }else if (level.length > 0){
+      this.errorMessage = 'level has to be number';
+    }
+    
   }
 
   addMember(){
@@ -34,7 +40,7 @@ export class AppComponent {
     const newTeamMemberCopy : TeamMember = {name: this.newTeamMember.name, level: this.newTeamMember.level};
     this.members.push(newTeamMemberCopy)
     this.newTeamMember.name = '';
-    this.newTeamMember.level = 0;
+    this.newTeamMember.level = '';
     this.errorMessage = '';
   }
 
@@ -52,7 +58,7 @@ export class AppComponent {
     }
 
     this.errorMessage='';
-    const sortedMembers = allMembers.sort((a ,b)=> b.level - a.level);
+    const sortedMembers = allMembers.sort((a ,b)=> +b.level - +a.level);
     this.teams = [];
     for (let i = 0; i < this.numberOfTeams; i++){
       this.teams.push([]);

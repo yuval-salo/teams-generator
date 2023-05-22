@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 interface TeamMember{
   name: string;
-  level: number;
+  level: number | '' ;
 }
 @Component({
   selector: 'app-team',
